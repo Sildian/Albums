@@ -44,11 +44,11 @@ class AlbumsRepositoryTest {
         runBlocking {
             val songs = albumsRepository.loadAllSongs()
             assertEquals(5, songs.size)
-            assertEquals("Metallica 1", songs[0])
-            assertEquals("Metallica 2", songs[1])
-            assertEquals("Metallica 3", songs[2])
-            assertEquals("Iron Savior 1", songs[3])
-            assertEquals("Iron Savior 2", songs[4])
+            assertEquals("Metallica 1", songs[0].title)
+            assertEquals("Metallica 2", songs[1].title)
+            assertEquals("Metallica 3", songs[2].title)
+            assertEquals("Iron Savior 1", songs[3].title)
+            assertEquals("Iron Savior 2", songs[4].title)
         }
     }
 }

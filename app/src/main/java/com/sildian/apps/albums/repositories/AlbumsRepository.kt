@@ -12,8 +12,8 @@ import javax.inject.Inject
 @ViewModelScoped
 class AlbumsRepository @Inject constructor (private val albumsQueries: AlbumQueries) {
 
-    suspend fun loadAllSongs(): List<Song> {
-        //TODO implement
-        return arrayListOf()
-    }
+    suspend fun loadAllSongs(): List<Song> =
+        this.albumsQueries.getAllSongs()
+            .sortedBy { it.id }
+            .sortedBy { it.albumId }
 }
