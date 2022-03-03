@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/margin_small"
+    app:cardCornerRadius="@dimen/corner_radius_default"
+    app:cardElevation="@dimen/elevation_default">
 
-    <ImageView
-        android:id="@+id/item_list_songs_image"
-        android:layout_width="@dimen/image_size_medium"
-        android:layout_height="@dimen/image_size_medium"
-        android:layout_margin="@dimen/margin_medium"
-        tools:srcCompat="@drawable/ic_album"
-        android:contentDescription="@string/image_content_description_song"/>
-
-    <TextView
-        android:id="@+id/item_list_songs_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_medium"
-        android:textSize="@dimen/text_size_medium"
-        tools:text="Metallica"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/item_list_songs_image"
+            android:layout_width="@dimen/image_size_medium"
+            android:layout_height="@dimen/image_size_medium"
+            android:layout_margin="@dimen/margin_small"
+            tools:srcCompat="@drawable/ic_album"
+            android:contentDescription="@string/image_content_description_song"/>
+
+        <TextView
+            style="@style/TextAppearanceSubTitle"
+            android:id="@+id/item_list_songs_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            tools:text="Metallica" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

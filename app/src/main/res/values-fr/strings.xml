@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="image_content_description_song">Image de titre d\'album</string>
+    <string name="text_message_songs_empty">Aucun titre à afficher</string>
 </resources>

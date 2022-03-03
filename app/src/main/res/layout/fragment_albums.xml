@@ -6,12 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.AlbumsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_albums_list_songs"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_albums_swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_albums_list_songs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/fragment_albums_progress_bar"
@@ -19,6 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
+        android:visibility="gone"/>
+
+    <TextView
+        style="@style/textAppearanceSubTitleNoColor"
+        android:id="@+id/fragment_albums_text_place_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/text_message_songs_empty"
         android:visibility="gone"/>
 
 </FrameLayout>

@@ -35,7 +35,7 @@ class AlbumsFragment : Fragment() {
         initUI()
         initData()
         if (this.albumsViewModel.songs.value.isNullOrEmpty()) {
-            loadData()
+            loadData(true)
         }
         return this.binding.root
     }
@@ -44,19 +44,33 @@ class AlbumsFragment : Fragment() {
 
     private fun initData() {
         this.albumsViewModel.songs.observe(viewLifecycleOwner) { songs ->
-            hideProgressBar()
-            updateSongsList(songs)
+            onLoadDataSuccess(songs)
         }
         this.albumsViewModel.error.observe(viewLifecycleOwner) { e ->
             e?.let {
-                hideProgressBar()
+                onLoadDataFailure(e)
             }
         }
     }
 
-    private fun loadData() {
-        showProgressBar()
+    private fun loadData(isFirstLoad: Boolean) {
+        if (isFirstLoad) {
+            updateProgressBarVisibility(true)
+        }
         this.albumsViewModel.loadAllSongs()
+    }
+
+    private fun onLoadDataSuccess(songs: List<Song>) {
+        updateProgressBarVisibility(false)
+        hideSwipe()
+        updateSongsList(songs)
+        updatePlaceHolderTextVisibility()
+    }
+
+    private fun onLoadDataFailure(e: Throwable) {
+        updateProgressBarVisibility(false)
+        hideSwipe()
+        updatePlaceHolderTextVisibility()
     }
 
     /**UI monitoring**/
@@ -64,6 +78,9 @@ class AlbumsFragment : Fragment() {
     private fun initUI() {
         this.songsAdapter = SongsAdapter(this.songs)
         this.binding.fragmentAlbumsListSongs.adapter = this.songsAdapter
+        this.binding.fragmentAlbumsSwipe.setOnRefreshListener {
+            loadData(false)
+        }
     }
 
     private fun updateSongsList(songs: List<Song>) {
@@ -72,11 +89,17 @@ class AlbumsFragment : Fragment() {
         this.songsAdapter.notifyDataSetChanged()
     }
 
-    private fun showProgressBar() {
-        this.binding.fragmentAlbumsProgressBar.visibility = View.VISIBLE
+    private fun updateProgressBarVisibility(isVisible: Boolean) {
+        this.binding.fragmentAlbumsProgressBar.visibility =
+            takeIf { isVisible }?.let { View.VISIBLE }?: View.GONE
     }
 
-    private fun hideProgressBar() {
-        this.binding.fragmentAlbumsProgressBar.visibility = View.GONE
+    private fun hideSwipe() {
+        this.binding.fragmentAlbumsSwipe.isRefreshing = false
+    }
+
+    private fun updatePlaceHolderTextVisibility() {
+        this.binding.fragmentAlbumsTextPlaceHolder.visibility =
+            takeIf { this.songs.isEmpty() }?.let { View.VISIBLE }?: View.GONE
     }
 }

@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Texts -->
     <dimen name="text_size_small">15sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_large">24sp</dimen>
+
+    <!-- Margins -->
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">32dp</dimen>
+
+    <!-- Images -->
     <dimen name="image_size_small">48dp</dimen>
     <dimen name="image_size_medium">96dp</dimen>
     <dimen name="image_size_large">192dp</dimen>
+
+    <!-- Others -->
+    <dimen name="elevation_default">8dp</dimen>
+    <dimen name="corner_radius_default">16dp</dimen>
+
 </resources>
