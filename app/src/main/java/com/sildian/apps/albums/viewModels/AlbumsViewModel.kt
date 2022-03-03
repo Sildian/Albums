@@ -1,5 +1,6 @@
 package com.sildian.apps.albums.viewModels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlbumsViewModel @Inject constructor(): ViewModel() {
+
+    companion object {
+        private const val TAG = "AlbumsViewModel"
+    }
 
     /**Repository**/
 
@@ -42,10 +47,14 @@ class AlbumsViewModel @Inject constructor(): ViewModel() {
     fun loadAllSongs() {
         viewModelScope.launch(exceptionHandler) {
             withContext(Dispatchers.IO) {
+                Log.d(TAG, "Load all songs")
                 try {
-                    mutableSongs.postValue(albumsRepository.loadAllSongs())
+                    val songs = albumsRepository.loadAllSongs()
+                    Log.d(TAG, "${songs.size} songs successfully loaded")
+                    mutableSongs.postValue(songs)
                     mutableError.postValue(null)
                 } catch (e: Throwable) {
+                    Log.e(TAG, "Error while loading songs : ${e.message}")
                     mutableError.postValue(e)
                 }
             }
