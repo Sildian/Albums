@@ -18,7 +18,7 @@ import javax.inject.Inject
  ************************************************************************************************/
 
 @HiltViewModel
-class AlbumsViewModel: ViewModel() {
+class AlbumsViewModel @Inject constructor(): ViewModel() {
 
     /**Repository**/
 
