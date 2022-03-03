@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.sildian.apps.albums.R
 import com.sildian.apps.albums.databinding.ItemListSongBinding
 import com.sildian.apps.albums.model.Song
@@ -16,6 +18,11 @@ import com.sildian.apps.albums.model.Song
 class SongsAdapter(private val songs: List<Song>)
     : RecyclerView.Adapter<SongsAdapter.SongsViewHolder>()
 {
+
+    companion object {
+        private const val GLIDE_USER_AGENT_KEY = "User_Agent"
+        private const val GLIDE_USER_AGENT_VALUE = "FAKE_USER_AGENT"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder {
         val binding = ItemListSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -44,8 +51,13 @@ class SongsAdapter(private val songs: List<Song>)
 
         private fun updateImage() {
             this.song?.url?.let { url ->
+                val glideUrl = GlideUrl(url,
+                    LazyHeaders.Builder()
+                        .addHeader(GLIDE_USER_AGENT_KEY, GLIDE_USER_AGENT_VALUE)
+                        .build()
+                )
                 Glide.with(itemView)
-                    .load("$url.png")
+                    .load(glideUrl)
                     .centerCrop()
                     .placeholder(AppCompatResources.getDrawable(itemView.context, R.drawable.ic_album))
                     .into(this.binding.itemListSongsImage)
