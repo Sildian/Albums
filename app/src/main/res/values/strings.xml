@@ -2,4 +2,7 @@
     <string name="app_name" translatable="false">Albums</string>
     <string name="image_content_description_song">Song image</string>
     <string name="text_message_songs_empty">No song to display</string>
+    <string name="text_message_songs_load_failure_network_unavailable">The network is unavailable</string>
+    <string name="text_message_songs_load_failure_other">An error occurred while loading songs</string>
+    <string name="button_retry">Retry</string>
 </resources>

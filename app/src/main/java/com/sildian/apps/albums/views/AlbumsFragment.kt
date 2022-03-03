@@ -5,9 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
+import com.sildian.apps.albums.R
 import com.sildian.apps.albums.databinding.FragmentAlbumsBinding
 import com.sildian.apps.albums.model.Song
+import com.sildian.apps.albums.utils.Utils
 import com.sildian.apps.albums.viewModels.AlbumsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,10 +38,14 @@ class AlbumsFragment : Fragment() {
         this.binding = FragmentAlbumsBinding.inflate(inflater, container, false)
         initUI()
         initData()
+        return this.binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
         if (this.albumsViewModel.songs.value.isNullOrEmpty()) {
             loadData(true)
         }
-        return this.binding.root
     }
 
     /**Data monitoring**/
@@ -53,11 +61,19 @@ class AlbumsFragment : Fragment() {
         }
     }
 
-    private fun loadData(isFirstLoad: Boolean) {
-        if (isFirstLoad) {
-            updateProgressBarVisibility(true)
+    private fun loadData(showProgressBar: Boolean) {
+        context?.let { context ->
+            if (Utils.isNetworkAvailable(context)) {
+                if (showProgressBar) {
+                    updateProgressBarVisibility(true)
+                }
+                this.albumsViewModel.loadAllSongs()
+            } else {
+                hideSwipe()
+                updatePlaceHolderTextVisibility()
+                showMessage(R.string.text_message_songs_load_failure_network_unavailable)
+            }
         }
-        this.albumsViewModel.loadAllSongs()
     }
 
     private fun onLoadDataSuccess(songs: List<Song>) {
@@ -71,6 +87,7 @@ class AlbumsFragment : Fragment() {
         updateProgressBarVisibility(false)
         hideSwipe()
         updatePlaceHolderTextVisibility()
+        showMessage(R.string.text_message_songs_load_failure_other)
     }
 
     /**UI monitoring**/
@@ -101,5 +118,14 @@ class AlbumsFragment : Fragment() {
     private fun updatePlaceHolderTextVisibility() {
         this.binding.fragmentAlbumsTextPlaceHolder.visibility =
             takeIf { this.songs.isEmpty() }?.let { View.VISIBLE }?: View.GONE
+    }
+
+    private fun showMessage(@StringRes messageResourceId: Int) {
+        view?.let { view ->
+            Snackbar
+                .make(view, messageResourceId, Snackbar.LENGTH_LONG)
+                .setAction(R.string.button_retry) { loadData(true) }
+                .show()
+        }
     }
 }

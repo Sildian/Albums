@@ -2,4 +2,7 @@
 <resources>
     <string name="image_content_description_song">Image de titre d\'album</string>
     <string name="text_message_songs_empty">Aucun titre à afficher</string>
+    <string name="text_message_songs_load_failure_network_unavailable">Le réseau n\'est pas disponible</string>
+    <string name="text_message_songs_load_failure_other">Une erreur s\'est produite lors du chargement des titres</string>
+    <string name="button_retry">Réessayer</string>
 </resources>
