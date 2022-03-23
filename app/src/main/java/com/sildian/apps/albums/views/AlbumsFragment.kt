@@ -1,6 +1,7 @@
 package com.sildian.apps.albums.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlbumsFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "AlbumsFragment"
+    }
 
     /**Data**/
 
@@ -77,6 +82,7 @@ class AlbumsFragment : Fragment() {
     }
 
     private fun onLoadDataSuccess(songs: List<Song>) {
+        Log.d(TAG, "${songs.size} songs successfully loaded")
         updateProgressBarVisibility(false)
         hideSwipe()
         updateSongsList(songs)
@@ -84,6 +90,7 @@ class AlbumsFragment : Fragment() {
     }
 
     private fun onLoadDataFailure(e: Throwable) {
+        Log.e(TAG, "Error while loading songs : ${e.message}")
         updateProgressBarVisibility(false)
         hideSwipe()
         updatePlaceHolderTextVisibility()

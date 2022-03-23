@@ -1,6 +1,5 @@
 package com.sildian.apps.albums.viewModels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +8,7 @@ import com.sildian.apps.albums.model.Song
 import com.sildian.apps.albums.repositories.AlbumsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /*************************************************************************************************
@@ -19,15 +16,7 @@ import javax.inject.Inject
  ************************************************************************************************/
 
 @HiltViewModel
-class AlbumsViewModel @Inject constructor(): ViewModel() {
-
-    companion object {
-        private const val TAG = "AlbumsViewModel"
-    }
-
-    /**Repository**/
-
-    @Inject lateinit var albumsRepository: AlbumsRepository
+class AlbumsViewModel @Inject constructor(private val albumsRepository: AlbumsRepository): ViewModel() {
 
     /**Data**/
 
@@ -46,17 +35,12 @@ class AlbumsViewModel @Inject constructor(): ViewModel() {
 
     fun loadAllSongs() {
         viewModelScope.launch(exceptionHandler) {
-            withContext(Dispatchers.IO) {
-                Log.d(TAG, "Load all songs")
-                try {
-                    val songs = albumsRepository.loadAllSongs()
-                    Log.d(TAG, "${songs.size} songs successfully loaded")
-                    mutableSongs.postValue(songs)
-                    mutableError.postValue(null)
-                } catch (e: Throwable) {
-                    Log.e(TAG, "Error while loading songs : ${e.message}")
-                    mutableError.postValue(e)
-                }
+            try {
+                val songs = albumsRepository.loadAllSongs()
+                mutableSongs.postValue(songs)
+                mutableError.postValue(null)
+            } catch (e: Throwable) {
+                mutableError.postValue(e)
             }
         }
     }

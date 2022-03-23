@@ -1,8 +1,14 @@
 package com.sildian.apps.albums.repositories
 
-import com.sildian.apps.albums.dataSource.AlbumQueries
-import com.sildian.apps.albums.model.Song
+import com.sildian.apps.albums.testUtils.FakeAlbumQueries
+import com.sildian.apps.albums.testUtils.ServerSimulator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -11,36 +17,39 @@ import org.junit.Test
  * Tests for AlbumsRepository
  ************************************************************************************************/
 
+@ExperimentalCoroutinesApi
 class AlbumsRepositoryTest {
 
-    /**Fake data to avoid real queries on the server**/
-
-    private class FakeAlbumsQueries: AlbumQueries {
-
-        private val songs = arrayListOf(
-            Song(2, 2, "Iron Savior 2"),
-            Song(1, 3, "Metallica 3"),
-            Song(1, 1, "Metallica 1"),
-            Song(2, 1, "Iron Savior 1"),
-            Song(1, 2, "Metallica 2")
-        )
-
-        override suspend fun getAllSongs(): List<Song> {
-            return this.songs
-        }
-    }
-
-    /**Tests**/
-
+    private val dispatcher = TestCoroutineDispatcher()
     private lateinit var albumsRepository: AlbumsRepository
 
     @Before
     fun init() {
-        this.albumsRepository = AlbumsRepository(FakeAlbumsQueries())
+        Dispatchers.setMain(this.dispatcher)
+        this.albumsRepository = AlbumsRepository(FakeAlbumQueries(), this.dispatcher)
+    }
+
+    @After
+    fun finish() {
+        ServerSimulator.isServerReachable = true
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun given_noArgs_when_loadAllSongs_then_checkSongsArePresentAndSorted() {
+    fun given_serverUnreachable_when_getAllSongs_then_checkExceptionIsRaised() {
+        runBlocking {
+            ServerSimulator.isServerReachable = false
+            val songs = try {
+                albumsRepository.loadAllSongs()
+            } catch (e: Exception) {
+                null
+            }
+            assertNull(songs)
+        }
+    }
+
+    @Test
+    fun given_everythingOk_when_getAllSongs_then_checkSongsArePresentAndSorted() {
         runBlocking {
             val songs = albumsRepository.loadAllSongs()
             assertEquals(5, songs.size)
